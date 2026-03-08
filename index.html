@@ -1,0 +1,324 @@
+ht!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>6/X - 11 March 2026 | Graduation Memory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Itim&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sky-blue: #f0f7ff;
+            --main-blue: #0984e3;
+        }
+
+        * { box-sizing: border-box; }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Kanit', -apple-system, sans-serif;
+            background-color: var(--sky-blue);
+            overflow: hidden; 
+            height: 100%;
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-family: 'Itim', cursive;
+            font-size: clamp(2.2rem, 8vw, 3.8rem);
+            background: linear-gradient(-45deg, #0984e3, #6c5ce7, #e84393, #0984e3);
+            background-size: 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 5s ease infinite;
+            margin: 15px 0;
+            line-height: 1.2;
+        }
+
+        p { 
+            font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+            line-height: 1.7; 
+            color: #2d3436; 
+            max-width: 900px; 
+            padding: 0 15px;
+        }
+
+        .highlight-text {
+            display: inline-block;
+            background: linear-gradient(transparent 70%, #dff9fb 70%);
+            font-weight: bold;
+            padding: 0 5px;
+        }
+
+        .music-player {
+            position: fixed;
+            top: 20px; 
+            right: 20px;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 18px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .music-btn {
+            background: var(--main-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            margin-left: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        #falling-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1; 
+            transition: opacity 1s;
+        }
+
+        .falling-item {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .page {
+            display: none; 
+            width: 100%;
+            height: 100vh;
+            padding: 25px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        .active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: 2.5px solid var(--main-blue);
+            background: white;
+            color: var(--main-blue);
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .btn:hover {
+            background: var(--main-blue);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .btn-primary { background: var(--main-blue); color: white; }
+
+        #p_final { justify-content: flex-start; padding-top: 20px; }
+
+        .padlet-wrapper {
+            width: 100%;
+            flex-grow: 1; 
+            margin: 15px 0 35px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            background: white;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .heart-icon {
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+            color: #ff7675;
+            -webkit-text-fill-color: initial;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://audio.jukehost.co.uk/7yxIV2KGutZEZSY1oCcuaxp5VPJG2Afi" type="audio/mpeg">
+    </audio>
+
+    <div class="music-player" id="player">
+        <span style="font-size: 1rem; color: #555; font-weight: bold;">Music</span>
+        <button class="music-btn" onclick="toggleMusic()" id="musicBtn">▶</button>
+    </div>
+
+    <div id="falling-canvas"></div>
+
+    <div class="page active" id="p1">
+        <h1>วันที่ 11 มีนาคมนี้...<br>พวกเราก็จะจากกันแล้วนะ</h1>
+        <p>เหลืออีกไม่กี่วัน... บรรยากาศห้องเรียนเดิมๆ<br>เสียงหัวเราะที่คุ้นหูก็จะกลายเป็นเพียงอดีตไปแล้ว<br><span class="highlight-text">"จำเรื่องราววันวานของเราได้ไหม?"</span></p>
+        <div class="nav-container"><button class="btn btn-primary" onclick="startApp()">เปิดสมุดบันทึก</button></div>
+    </div>
+
+    <div class="page" id="p2">
+        <h1>ลองนึกย้อนกลับไปดูสิ...</h1>
+        <p>วันที่พวกเราแย่งกันซื้อข้าวในโรงอาหาร<br>วันที่แอบนอนในคาบที่น่าเบื่อ<br>วีรกรรมเหล่านั้นแหละที่ทำให้เราสนิทกันแบบวันนี้</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(1)">กลับ</button><button class="btn btn-primary" onclick="nextPage(3)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p3">
+        <h1>จำได้ไหม... วีรกรรมพวกเรา</h1>
+        <p>นอกจากเรื่องเรียน เรายังมีเรื่อง <span class="highlight-text" style="color:#fdcb6e;">"รั่วๆ"</span> อีกเพียบ<br>ทั้งตอนโดนทำโทษยกห้อง หรือตอนแอบนินทาใครบางคน<br>เสียงหัวเราะพวกนี้แหละ... คือยาแก้เหนื่อยชั้นดีเลย!</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(2)">กลับ</button><button class="btn btn-primary" onclick="nextPage(4)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p4">
+        <h1>ก้าวต่อไปของพวกเรา</h1>
+        <p>บางคนอาจจะมุ่งหน้าสู่ <span class="highlight-text">"รั้วมหาวิทยาลัย"</span><br>และบางคนอาจจะเริ่มต้นชีวิตใน <span class="highlight-text" style="color:#e17055;">"โลกวัยทำงาน"</span></p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(3)">กลับ</button><button class="btn btn-primary" onclick="nextPage(5)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p5">
+        <h1>แยกย้ายไปเติบโต...</h1>
+        <p>เราไม่ได้จากกันตลอดไปหรอกนะ<br>แค่ออกไปทำตามความฝันในทางของตัวเอง<br>ใคร <span class="highlight-text" style="color:#00b894;">"สำเร็จ"</span> แล้ว อย่าลืมกลับมาเล่าให้เพื่อนฟังนะ!</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(4)">กลับ</button><button class="btn btn-primary" onclick="nextPage(6)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p6">
+        <h1>อย่าเพิ่งยอมแพ้นะ!</h1>
+        <p>อย่าปล่อยให้ความเหนื่อยมาทำลาย <span class="highlight-text" style="color:#ff7675;">"ความฝัน"</span> นะ<br>ล้มได้แต่อย่าถอย... พักได้แต่ห้ามเลิก!</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(5)">กลับ</button><button class="btn btn-primary" onclick="nextPage(7)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p7">
+        <h1>ถ้ามันเหนื่อยเกินไป...</h1>
+        <p>จำไว้ว่าเธอยังมีเพื่อนกลุ่มนี้ที่พร้อมจะ <span class="highlight-text">"ซัพพอร์ต"</span> เสมอ<br>พวกเราจะอยู่ข้างเธอเหมือนวันแรกที่เจอเลย</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(6)">กลับ</button><button class="btn btn-primary" onclick="nextPage(8)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p8">
+        <h1>ขอให้โลกนี้ใจดีกับเธอ</h1>
+        <p>ขอให้ทุกคนเติบโตไปเป็น <span class="highlight-text">"เวอร์ชันที่ดีที่สุด"</span><br>ขอให้ความสุขโอบกอดพวกเธอในทุกวันนะ</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(7)">กลับ</button><button class="btn btn-primary" onclick="nextPage(9)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p9">
+        <h1>สัญญานะ... ว่าจะไม่ลืมกัน</h1>
+        <p>ไม่ว่าเวลาจะผ่านไปกี่สิบปี หรือเราจะเปลี่ยนไปแค่ไหน<br>แต่ <span class="highlight-text" style="color:#6c5ce7;">"มิตรภาพ"</span> ของพวกเราจะยังอยู่ที่เดิมเสมอ<br>เก็บหน้านี้ไว้ในใจ... เพื่อบอกว่าเรามีกันและกันนะ</p>
+        <div class="nav-container"><button class="btn" onclick="nextPage(8)">กลับ</button><button class="btn btn-primary" onclick="nextPage(10)">อ่านต่อ</button></div>
+    </div>
+
+    <div class="page" id="p10">
+        <h1>See You Again...</h1>
+        <p>วันนี้ไม่มีคำลา... มีแต่คำว่า <span class="highlight-text" style="color:#e84393;">"โชคดีนะ"</span><br>รักษาสุขภาพด้วย แล้ววันหนึ่งเราจะกลับมาฉลองด้วยกัน<br>รักทุกคนนะ  ม.6 <span class="heart-icon">✨</span></p>
+        <div class="nav-container">
+            <button class="btn" onclick="nextPage(9)">กลับ</button>
+            <button class="btn btn-primary" onclick="nextPage('_final')">เขียนความในใจ</button>
+        </div>
+    </div>
+
+    <div class="page" id="p_final">
+        <h1 style="font-size: 1.8rem; margin: 5px 0;">
+            <span class="heart-icon">❤️</span> มีความในใจถึงเพื่อนๆ ม.6 ทุคนไหม
+        </h1>
+        <div style="z-index: 100; margin-bottom: 10px;">
+            <button class="btn" style="padding: 8px 20px; font-size: 1rem;" onclick="nextPage(10)">← ย้อนกลับ</button>
+        </div>
+        <div class="padlet-wrapper">
+            <iframe src="https://padlet.com/embed/1w5kg8a2f83ov0ja"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById("bgMusic");
+        const btn = document.getElementById("musicBtn");
+        const player = document.getElementById("player");
+
+        async function startApp() {
+            try { await music.play(); btn.innerHTML = "||"; } catch (e) {}
+            nextPage(2);
+        }
+
+        function nextPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            
+            const targetPage = document.getElementById('p' + pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            if (pageId === '_final') {
+                player.style.top = 'auto';
+                player.style.right = 'auto';
+                player.style.bottom = '20px';
+                player.style.left = '20px';
+                document.getElementById('falling-canvas').style.opacity = "0.15";
+            } else {
+                player.style.bottom = 'auto';
+                player.style.left = 'auto';
+                player.style.top = '20px';
+                player.style.right = '20px';
+                document.getElementById('falling-canvas').style.opacity = "1";
+            }
+        }
+
+        function toggleMusic() {
+            if (music.paused) { music.play(); btn.innerHTML = "||"; } 
+            else { music.pause(); btn.innerHTML = "▶"; }
+        }
+
+        function createFallingElements() {
+            const container = document.getElementById('falling-canvas');
+            const items = ['🎓', '📜', '✨', '🎈', '🌸']; 
+            for (let i = 0; i < 20; i++) {
+                const element = document.createElement('div');
+                element.className = 'falling-item';
+                element.innerText = items[Math.floor(Math.random() * items.length)];
+                element.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                element.style.animationDelay = (Math.random() * -10) + 's';
+                container.appendChild(element);
+            }
+        }
+        createFallingElements();
+    </script>
+</body>
+</html>
+
